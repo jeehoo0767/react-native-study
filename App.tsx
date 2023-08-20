@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
-// import type {PropsWithChildren} from 'react';
+
 import {
   Dimensions,
   Platform,
   SafeAreaView,
+  SafeAreaViewBase,
+  SafeAreaViewComponent,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -20,111 +22,33 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import Geolocation from 'react-native-geolocation-service';
+import Button from './src/components/@core/Button';
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 
 function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-  const [locations, setLocations] = useState<{
-    latitude: number;
-    longitude: number;
-  }>();
-
-  const requestLocationPermissionIOS = async () => {
-    const status = await Geolocation.requestAuthorization('whenInUse');
-
-    if (status === 'granted') {
-      return true;
-    }
-
-    if (status === 'denied') {
-      console.error('Location permission denied');
-    }
-  };
-
-  const hasLocationPermission = async () => {
-    const hasPermission = await requestLocationPermissionIOS();
-    return hasPermission;
-  };
-
-  const getLocation = async () => {
-    const hasPermission = await hasLocationPermission();
-    if (!hasPermission) {
-      return;
-    }
-
-    Geolocation.getCurrentPosition(
-      position => {
-        console.log(position);
-        const {latitude, longitude} = position.coords;
-        console.log(latitude);
-        setLocations({
-          latitude,
-          longitude,
-        });
-      },
-      error => {
-        console.error(error.code, error.message);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 15000,
-        maximumAge: 10000,
-        distanceFilter: 0,
-        forceRequestLocation: true,
-        forceLocationManager: true,
-        showLocationDialog: true,
-      },
-    );
-  };
-
-  useEffect(() => {
-    getLocation();
-  }, []);
-
   return (
     <SafeAreaView style={styles.sectionContainer}>
-      <View style={styles.locationView}>
-        <Text style={styles.locationText}>Seoul</Text>
-      </View>
-      <View style={styles.scrollView}>
-        <ScrollView
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}>
-          <View style={styles.dayView}>
-            <Text style={styles.weatherTempText}>27</Text>
-            <Text style={styles.weatherDescText}>Sunny</Text>
+      <View style={styles.containerView}>
+        <View style={styles.sectionTitleView}>
+          <Text style={styles.sectionTitleText}>TodoList - RN</Text>
+        </View>
+        <View style={styles.listContainer}>
+          <View style={styles.listItem}>
+            <View style={styles.dotStyle}></View>
+            <Text style={styles.listItemText}>asf</Text>
           </View>
-          <View style={styles.dayView}>
-            <Text style={styles.weatherTempText}>27</Text>
-            <Text style={styles.weatherDescText}>Sunny</Text>
-          </View>
-          <View style={styles.dayView}>
-            <Text style={styles.weatherTempText}>27</Text>
-            <Text style={styles.weatherDescText}>Sunny</Text>
-          </View>
-          <View style={styles.dayView}>
-            <Text style={styles.weatherTempText}>27</Text>
-            <Text style={styles.weatherDescText}>Sunny</Text>
-          </View>
-          <View style={styles.dayView}>
-            <Text style={styles.weatherTempText}>27</Text>
-            <Text style={styles.weatherDescText}>Sunny</Text>
-          </View>
-          <View style={styles.dayView}>
-            <Text style={styles.weatherTempText}>27</Text>
-            <Text style={styles.weatherDescText}>Sunny</Text>
-          </View>
-          <View style={styles.dayView}>
-            <Text style={styles.weatherTempText}>27</Text>
-            <Text style={styles.weatherDescText}>Sunny</Text>
-          </View>
-        </ScrollView>
+        </View>
+        <View style={{alignItems: 'center', marginTop: 10}}>
+          <Button
+            style={{
+              width: 180,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            + New Task
+          </Button>
+        </View>
       </View>
       <StatusBar barStyle="light-content" />
     </SafeAreaView>
@@ -134,30 +58,56 @@ function App(): JSX.Element {
 const styles = StyleSheet.create({
   sectionContainer: {
     flex: 1,
-    backgroundColor: 'tomato',
+    backgroundColor: 'rgb(223 230 253)',
   },
-  locationView: {
+  containerView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: 30,
   },
-  locationText: {
-    fontSize: 42,
+  sectionTitleView: {
+    marginBottom: 30,
+    padding: 10,
+    backgroundColor: 'rgb(159 121 255)',
+    shadowColor: '#171717',
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+  },
+  sectionTitleText: {
+    textAlign: 'center',
+    fontSize: 21,
     fontWeight: '700',
+    color: '#fff',
   },
-  scrollView: {
-    flex: 2,
+
+  listContainer: {
+    display: 'flex',
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    backgroundColor: '#fff',
+    position: 'relative',
   },
-  dayView: {
-    width: SCREEN_WIDTH,
+  listItem: {
+    flexDirection: 'row',
     alignItems: 'center',
+    marginVertical: 8,
   },
-  weatherTempText: {
-    fontSize: 56,
-    fontWeight: '700',
+  listItemText: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: 'rgb(152 161 187)',
   },
-  weatherDescText: {
-    fontSize: 28,
+  dotStyle: {
+    borderRadius: 50,
+    width: 8,
+    height: 8,
+    marginRight: 8,
+    borderWidth: 1,
+    borderColor: 'rgb(152 161 187)',
+    borderStyle: 'solid',
+  },
+  buttonStyle: {
+    backgroundColor: 'rgb(159 121 255)',
   },
 });
 
