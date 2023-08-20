@@ -1,31 +1,17 @@
-import React, {useEffect, useState} from 'react';
-
 import {
-  Dimensions,
-  Platform,
   SafeAreaView,
-  SafeAreaViewBase,
-  SafeAreaViewComponent,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   TextInput,
-  useColorScheme,
   View,
 } from 'react-native';
+import Button from '../components/@core/Button';
+import React, {useState} from 'react';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-import Button from './src/components/@core/Button';
-
-const {width: SCREEN_WIDTH} = Dimensions.get('window');
+import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../types/NavigationStackType';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 interface ITodoList {
   id: number;
@@ -33,7 +19,9 @@ interface ITodoList {
   isComplated: boolean;
 }
 
-function App(): JSX.Element {
+type HomeScreenProps = NativeStackScreenProps<RootStackParamList>;
+
+const HomeScreen = ({navigation}: HomeScreenProps) => {
   const [todoList, setTodoList] = useState<ITodoList[]>([]);
   const [editTodoTitle, setEditTodoTitle] = useState(false);
   const [todoTitleValue, setTodoTitleValue] = useState('');
@@ -62,7 +50,7 @@ function App(): JSX.Element {
   };
 
   return (
-    <SafeAreaView style={styles.sectionContainer}>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'rgb(223 230 253)'}}>
       <View style={styles.containerView}>
         <View style={styles.sectionTitleView}>
           <Text style={styles.sectionTitleText}>TodoList - RN</Text>
@@ -120,19 +108,19 @@ function App(): JSX.Element {
               onPress={addTodo}>
               + New Task
             </Button>
+            <Button onPress={() => navigation.navigate('About')}>
+              Go To About
+            </Button>
           </View>
         </ScrollView>
       </View>
-      <StatusBar barStyle="light-content" />
     </SafeAreaView>
   );
-}
+};
+
+export default HomeScreen;
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    flex: 1,
-    backgroundColor: 'rgb(223 230 253)',
-  },
   containerView: {
     flex: 1,
     padding: 30,
@@ -184,5 +172,3 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
   },
 });
-
-export default App;
