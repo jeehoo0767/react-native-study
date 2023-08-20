@@ -10,6 +10,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   useColorScheme,
   View,
 } from 'react-native';
@@ -34,18 +35,30 @@ interface ITodoList {
 
 function App(): JSX.Element {
   const [todoList, setTodoList] = useState<ITodoList[]>([]);
+  const [editTodoTitle, setEditTodoTitle] = useState(false);
+  const [todoTitleValue, setTodoTitleValue] = useState('');
+
+  const onChangeTodoTitleValue = (e: string) => {
+    setTodoTitleValue(e);
+  };
+
+  const addTodo = () => {
+    setEditTodoTitle(true);
+  };
 
   const onPressNewTodo = () => {
     const newList = [
       ...todoList,
       {
-        id: todoList[todoList.length - 1]?.id ?? 0,
-        title: 'new',
+        id: todoList[todoList.length - 1]?.id + 1 || 0,
+        title: todoTitleValue,
         isComplated: false,
       },
     ];
 
     setTodoList(newList);
+    setEditTodoTitle(false);
+    setTodoTitleValue('');
   };
 
   return (
@@ -58,21 +71,53 @@ function App(): JSX.Element {
           <View style={styles.listContainer}>
             {todoList.map(item => {
               return (
-                <View style={styles.listItem}>
+                <View
+                  key={item.id}
+                  style={styles.listItem}
+                  onTouchStart={() => console.log(`아이템 ID: ${item.id}`)}>
                   <View style={styles.dotStyle}></View>
                   <Text style={styles.listItemText}>{item.title}</Text>
                 </View>
               );
             })}
+            {editTodoTitle && (
+              <>
+                <View style={styles.listItem}>
+                  <View style={styles.dotStyle}></View>
+                  <TextInput
+                    style={{
+                      flex: 1,
+                      borderWidth: 1,
+                      borderColor: 'rgb(152 161 187)',
+                      borderRadius: 4,
+                      padding: 10,
+                    }}
+                    value={todoTitleValue}
+                    onChangeText={e => onChangeTodoTitleValue(e)}
+                  />
+                  <Button
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                    onPress={onPressNewTodo}>
+                    <Text style={{color: 'rgb(152 161 187)', fontSize: 16}}>
+                      Submit
+                    </Text>
+                  </Button>
+                </View>
+              </>
+            )}
           </View>
-          <View style={{alignItems: 'center', marginTop: 10}}>
+          <View style={{alignItems: 'center', marginTop: 20}}>
             <Button
               style={{
                 width: 180,
                 alignItems: 'center',
                 justifyContent: 'center',
+                backgroundColor: 'rgb(159 121 255)',
               }}
-              onPress={onPressNewTodo}>
+              onPress={addTodo}>
               + New Task
             </Button>
           </View>
@@ -110,9 +155,14 @@ const styles = StyleSheet.create({
 
   listContainer: {
     display: 'flex',
+    minHeight: 200,
     padding: 15,
     backgroundColor: '#fff',
     position: 'relative',
+    shadowColor: '#171717',
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
   listItem: {
     flexDirection: 'row',
@@ -132,9 +182,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgb(152 161 187)',
     borderStyle: 'solid',
-  },
-  buttonStyle: {
-    backgroundColor: 'rgb(159 121 255)',
   },
 });
 

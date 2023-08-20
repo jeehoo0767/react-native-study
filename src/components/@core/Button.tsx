@@ -8,7 +8,6 @@ const Button = ({children, style, ...rest}: PropsWithChildren<ButtonProps>) => {
   return (
     <TouchableOpacity
       style={{
-        backgroundColor: 'rgb(159 121 255)',
         padding: 15,
         borderRadius: 50,
         ...style,
