@@ -1,14 +1,8 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 // import type {PropsWithChildren} from 'react';
 import {
   Dimensions,
+  Platform,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -26,6 +20,8 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import Geolocation from 'react-native-geolocation-service';
+
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 
 function App(): JSX.Element {
@@ -33,6 +29,62 @@ function App(): JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+  const [locations, setLocations] = useState<{
+    latitude: number;
+    longitude: number;
+  }>();
+
+  const requestLocationPermissionIOS = async () => {
+    const status = await Geolocation.requestAuthorization('whenInUse');
+
+    if (status === 'granted') {
+      return true;
+    }
+
+    if (status === 'denied') {
+      console.error('Location permission denied');
+    }
+  };
+
+  const hasLocationPermission = async () => {
+    const hasPermission = await requestLocationPermissionIOS();
+    return hasPermission;
+  };
+
+  const getLocation = async () => {
+    const hasPermission = await hasLocationPermission();
+    if (!hasPermission) {
+      return;
+    }
+
+    Geolocation.getCurrentPosition(
+      position => {
+        console.log(position);
+        const {latitude, longitude} = position.coords;
+        console.log(latitude);
+        setLocations({
+          latitude,
+          longitude,
+        });
+      },
+      error => {
+        console.error(error.code, error.message);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 10000,
+        distanceFilter: 0,
+        forceRequestLocation: true,
+        forceLocationManager: true,
+        showLocationDialog: true,
+      },
+    );
+  };
+
+  useEffect(() => {
+    getLocation();
+  }, []);
 
   return (
     <SafeAreaView style={styles.sectionContainer}>
