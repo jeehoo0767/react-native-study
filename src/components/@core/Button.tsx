@@ -4,7 +4,7 @@ import {TouchableOpacityProps} from 'react-native/Libraries/Components/Touchable
 
 type ButtonProps = {} & TouchableOpacityProps;
 
-const Button = ({children, style}: PropsWithChildren<ButtonProps>) => {
+const Button = ({children, style, ...rest}: PropsWithChildren<ButtonProps>) => {
   return (
     <TouchableOpacity
       style={{
@@ -12,7 +12,8 @@ const Button = ({children, style}: PropsWithChildren<ButtonProps>) => {
         padding: 15,
         borderRadius: 50,
         ...style,
-      }}>
+      }}
+      {...rest}>
       <Text style={{color: '#fff', fontWeight: '700', fontSize: 20}}>
         {children}
       </Text>

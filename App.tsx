@@ -26,29 +26,57 @@ import Button from './src/components/@core/Button';
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 
+interface ITodoList {
+  id: number;
+  title: string;
+  isComplated: boolean;
+}
+
 function App(): JSX.Element {
+  const [todoList, setTodoList] = useState<ITodoList[]>([]);
+
+  const onPressNewTodo = () => {
+    const newList = [
+      ...todoList,
+      {
+        id: todoList[todoList.length - 1]?.id ?? 0,
+        title: 'new',
+        isComplated: false,
+      },
+    ];
+
+    setTodoList(newList);
+  };
+
   return (
     <SafeAreaView style={styles.sectionContainer}>
       <View style={styles.containerView}>
         <View style={styles.sectionTitleView}>
           <Text style={styles.sectionTitleText}>TodoList - RN</Text>
         </View>
-        <View style={styles.listContainer}>
-          <View style={styles.listItem}>
-            <View style={styles.dotStyle}></View>
-            <Text style={styles.listItemText}>asf</Text>
+        <ScrollView>
+          <View style={styles.listContainer}>
+            {todoList.map(item => {
+              return (
+                <View style={styles.listItem}>
+                  <View style={styles.dotStyle}></View>
+                  <Text style={styles.listItemText}>{item.title}</Text>
+                </View>
+              );
+            })}
           </View>
-        </View>
-        <View style={{alignItems: 'center', marginTop: 10}}>
-          <Button
-            style={{
-              width: 180,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            + New Task
-          </Button>
-        </View>
+          <View style={{alignItems: 'center', marginTop: 10}}>
+            <Button
+              style={{
+                width: 180,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onPress={onPressNewTodo}>
+              + New Task
+            </Button>
+          </View>
+        </ScrollView>
       </View>
       <StatusBar barStyle="light-content" />
     </SafeAreaView>
@@ -82,8 +110,7 @@ const styles = StyleSheet.create({
 
   listContainer: {
     display: 'flex',
-    paddingVertical: 15,
-    paddingHorizontal: 10,
+    padding: 15,
     backgroundColor: '#fff',
     position: 'relative',
   },
