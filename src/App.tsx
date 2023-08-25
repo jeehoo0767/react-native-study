@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {StatusBar, View} from 'react-native';
+import {StatusBar} from 'react-native';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 

@@ -49,6 +49,24 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     setTodoTitleValue('');
   };
 
+  const completeTodo = (itemId: number) => {
+    console.log(itemId);
+    const newList = todoList.map(item => {
+      if (item.id === itemId) {
+        return {
+          ...item,
+          isComplated: true,
+        };
+      } else {
+        return {
+          ...item,
+        };
+      }
+    });
+    console.log(newList);
+    setTodoList(newList);
+  };
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'rgb(223 230 253)'}}>
       <View style={styles.containerView}>
@@ -62,9 +80,17 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
                 <View
                   key={item.id}
                   style={styles.listItem}
-                  onTouchStart={() => console.log(`아이템 ID: ${item.id}`)}>
+                  onTouchStart={() => completeTodo(item.id)}>
                   <View style={styles.dotStyle}></View>
-                  <Text style={styles.listItemText}>{item.title}</Text>
+                  <Text
+                    style={{
+                      ...styles.listItemText,
+                      textDecorationLine: item.isComplated
+                        ? 'line-through'
+                        : 'none',
+                    }}>
+                    {item.title}
+                  </Text>
                 </View>
               );
             })}
