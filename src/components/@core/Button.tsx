@@ -8,8 +8,6 @@ const Button = ({children, style, ...rest}: PropsWithChildren<ButtonProps>) => {
   return (
     <TouchableOpacity
       style={{
-        padding: 15,
-        borderRadius: 50,
         ...style,
       }}
       {...rest}>

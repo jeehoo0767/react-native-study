@@ -50,7 +50,6 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   };
 
   const completeTodo = (itemId: number) => {
-    console.log(itemId);
     const newList = todoList.map(item => {
       if (item.id === itemId) {
         return {
@@ -63,7 +62,13 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         };
       }
     });
-    console.log(newList);
+
+    setTodoList(newList);
+  };
+
+  const removeTodo = (itemId: number) => {
+    const newList = todoList.filter(item => item.id !== itemId);
+
     setTodoList(newList);
   };
 
@@ -91,6 +96,20 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
                     }}>
                     {item.title}
                   </Text>
+                  {item.isComplated && (
+                    <Button
+                      style={{
+                        backgroundColor: 'rgb(159 121 255)',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginLeft: 10,
+                        padding: 10,
+                        borderRadius: 8,
+                      }}
+                      onPress={() => removeTodo(item.id)}>
+                      <Text style={{fontSize: 14}}>Done</Text>
+                    </Button>
+                  )}
                 </View>
               );
             })}
@@ -105,6 +124,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
                       borderColor: 'rgb(152 161 187)',
                       borderRadius: 4,
                       padding: 10,
+                      marginRight: 10,
                     }}
                     value={todoTitleValue}
                     onChangeText={e => onChangeTodoTitleValue(e)}
@@ -130,6 +150,9 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 backgroundColor: 'rgb(159 121 255)',
+                padding: 15,
+                borderRadius: 50,
+                marginBottom: 10,
               }}
               onPress={addTodo}>
               + New Task
